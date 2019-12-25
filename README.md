@@ -37,7 +37,7 @@
    
 - `Standard`  
    基準となるDICOMファイルをこのフォルダに保存してください．  
-   **シングルフレーム**のみ対応です．マルチフレームに対応してほしい場合は申し付けください．  
+   **シングルフレーム**のみ対応です．マルチフレーム(Enhanced DICOM)に対応してほしい場合は申し付けください．  
    また，DICOMに保存されている**画像形式によってはエラーが出ます**．エラーが出た場合には連絡ください．
    
 - `Standard_binary`  
@@ -63,6 +63,7 @@
 - `opencv-python`
 - `pillow`
 - `pydicom`
+- `natsort`
 
  → Check [[How to install Modules]](https://github.com/YosukeSugiura/EPI_DistortionAssesment/blob/master/How2Install_Python.md)
  
@@ -82,18 +83,22 @@
 
 3. 各フォルダ内にデバッグ用のDICOM，JPGファイルが入っています．**自身のデータで実行する場合には不要ですので消してください．**
 
+4. 基準となるDICOMファイルと評価対象のDICOMファイルを用意し，それぞれ`Standard`フォルダと`Distortion`フォルダに入れてください．  
+   **マルチフレーム(Enhanced DICOM)には対応していません．また画像形式によっては読み込みエラーが発生します．**  
+   対応が必要な場合には申し付けください．
+
 
 ## 2. 実行
 
 1. PyCahrmで`Geometric_Distortion_ratio_v1.py`を開いてください．
 
-2. 実行してください．(通常，右上の実行ボタンを押す or メニューバーから`Run`→`Run`，コンテクストメニューから`Geometric_Distortion_ratio_v1`を選択．)
+2. 実行してください．(通常，PyCharmのウィンドウ右上の実行ボタン(緑色の矢印)を押す or メニューバーから`Run`→`Run`，コンテクストメニューから`Geometric_Distortion_ratio_v1`を選択．)
 
 ## 3. 結果
 
-1. ２値化前の歪のない画像(.jpg)を`Standard`に保存します．２値化後の歪のない画像(.jpg)を`Standard_binary`に保存します．
+1. ２値化前の基準画像(.jpg)を`Standard`に保存します．２値化後の基準画像(.jpg)を`Standard_binary`に保存します．
 
-2. ２値化前の歪のある画像(.jpg)を`Distortion`に保存します．２値化後の歪のない画像(.jpg)を`Distortion_binary`に保存します．
+2. ２値化前の評価対象画像(.jpg)を`Distortion`に保存します．２値化後の評価対象画像(.jpg)を`Distortion_binary`に保存します．
 
 3. GDRの結果を`GDR.csv`として保存します．
 
@@ -103,8 +108,8 @@
 いくつかのパラメータが制御可能です．
 
 - **２値化を行う際のしきい値**  
-  `Geometric_Distortion_ratio_v1.py`の行目より，２値化処理のしきい値を変更できます．**0~255**の間で指定してください．
+  `Geometric_Distortion_ratio_v1.py`の37行目より，２値化処理のしきい値を変更できます．**0~1**の間で指定してください．
   
   ``` 
-  Th = 128 
+  T = 0.5 
   ```

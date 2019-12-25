@@ -49,7 +49,7 @@
 
 - `Python 3.6.8`
 
- → Check [[How to install Python in mac]]()
+ → Check [[How to install Python in mac]](https://github.com/YosukeSugiura/EPI_DistortionAssesment/blob/master/How2Install_Python.md)
 
 **[Module]**  
 
@@ -57,13 +57,13 @@
 - `opencv-python`
 - `pydicom`
 
- → Check [[How to install Modules]]()
+ → Check [[How to install Modules]](https://github.com/YosukeSugiura/EPI_DistortionAssesment/blob/master/How2Install_Python.md)
  
 **[Environment]** 
 
 - `PyCharm`
 
- → Check [[How to install PyCharm]]()
+ → Check [[How to install PyCharm]](https://github.com/YosukeSugiura/EPI_DistortionAssesment/blob/master/How2Install_Python.md)
 
 # 実行方法
 

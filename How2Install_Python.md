@@ -8,8 +8,10 @@
 ## 1.  Python Installation
 
 はじめに，以下の手順でPythonをインストールします．  
-正直，追証していないので自信ないです．
-お困りの場合は[このページ](https://www.python.jp/install/macos/index.html)が参考になるでしょう．
+正直，追証していないのでエラーが出る可能性はあります．
+**エラーが出た場合，連絡ください．**
+
+ここで書いている内容は，[このページ](https://www.python.jp/install/macos/index.html)を参考にしました．
 
   1. Download `Python 3.6.8 Package Installer` from this [Direct Link](https://www.python.org/ftp/python/3.6.8/python-3.6.8-macosx10.9.pkg).
   
@@ -29,6 +31,7 @@ pip3 install --upgrade numpy
 pip3 install --upgrade opencv-python
 pip3 install --upgrade pillow
 pip3 install --upgrade pydicom
+pip3 install --upgrade natsort
 ```
 
 ## 3.  PyCharm Installation

@@ -13,7 +13,7 @@
 ## 動作
 
 歪のない画像(DICOM形式)と，それに対応した歪みのある画像(DICOM形式)を用意します．  
-このプログラムは，それらを読み込んで２値化処理を行い，Geometric Distortion Ratio (GDR)を計算します．  
+このプログラムは，それらのファイルから画像データのみを抽出して２値化処理を行い，Geometric Distortion Ratio (GDR)を計算します．  
 計算したGDRはCSVファイルに保存します．
 
 > Geometric Distortion Ratio  

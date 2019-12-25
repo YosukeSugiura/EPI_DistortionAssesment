@@ -53,9 +53,9 @@
 
 **[Python]**  
 
-- `Python 3.6.8`
-
- → Check [[How to install Python in mac]](https://github.com/YosukeSugiura/EPI_DistortionAssesment/blob/master/How2Install_Python.md)
+- `Python 3.6.8`  
+  
+  → こちらも確認 [[Python Installation in mac]](https://github.com/YosukeSugiura/EPI_DistortionAssesment/blob/master/How2Install_Python.md#1--python-installation)
 
 **[Module]**  
 
@@ -63,15 +63,15 @@
 - `opencv-python`
 - `pillow`
 - `pydicom`
-- `natsort`
+- `natsort`  
 
- → Check [[How to install Modules]](https://github.com/YosukeSugiura/EPI_DistortionAssesment/blob/master/How2Install_Python.md)
+  → こちらも確認 [[How to install Modules]](https://github.com/YosukeSugiura/EPI_DistortionAssesment/blob/master/How2Install_Python.md#2--python-module-installation)
  
 **[Environment]** 
 
-- `PyCharm`
-
- → Check [[How to install PyCharm]](https://github.com/YosukeSugiura/EPI_DistortionAssesment/blob/master/How2Install_Python.md)
+- `PyCharm`  
+  
+  → こちらも確認 [[How to install PyCharm]](https://github.com/YosukeSugiura/EPI_DistortionAssesment/blob/master/How2Install_Python.md#3--pycharm-installation)
 
 # 実行方法
 
@@ -108,7 +108,7 @@
 いくつかのパラメータが制御可能です．
 
 - **２値化を行う際のしきい値**  
-  `Geometric_Distortion_ratio_v1.py`の37行目より，２値化処理のしきい値を変更できます．**0~1**の間で指定してください．
+  `Geometric_Distortion_ratio_v1.py`のパラメータ`T`で，２値化処理のしきい値を変更できます．**0~1**の間で指定してください．
   
   ``` 
   T = 0.5 

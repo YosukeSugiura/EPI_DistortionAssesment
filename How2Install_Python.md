@@ -25,9 +25,10 @@
 
 ```
 pip3 install --upgrade pip
-pip3 install numpy
-pip3 install opencv-python
-pip3 install pydicom
+pip3 install --upgrade numpy
+pip3 install --upgrade opencv-python
+pip3 install --upgrade pillow
+pip3 install --upgrade pydicom
 ```
 
 ## 3.  PyCharm Installation

@@ -55,6 +55,7 @@
 
 - `numpy`
 - `opencv-python`
+- `pillow`
 - `pydicom`
 
  → Check [[How to install Modules]](https://github.com/YosukeSugiura/EPI_DistortionAssesment/blob/master/How2Install_Python.md)
@@ -89,3 +90,13 @@
 3. GDRの結果を`GDR.csv`として保存します．
 
 
+# 設定
+
+いくつかのパラメータが制御可能です．
+
+- **２値化を行う際のしきい値**  
+  `Geometric_Distortion_ratio_v1.py`の行目より，２値化処理のしきい値を変更できます．**0~255**の間で指定してください．
+  
+  ``` 
+  Th = 128 
+  ```

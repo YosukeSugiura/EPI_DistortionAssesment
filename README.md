@@ -32,16 +32,22 @@
    **シングルフレーム**のみ対応です．マルチフレーム(Enhanced DICOM)に対応してほしい場合は申し付けください．  
    また，DICOMに保存されている**画像形式によってはエラーが出ます**．エラーが出た場合には連絡ください．
    
-- `Distortion_binary`  
+- `Distortion_binary_jpg`  
    ２値化後の評価対象画像(JPEG)を保存するフォルダです．
+   
+- `Distortion_jpg`  
+   ２値化前の評価対象画像(JPEG)を保存するフォルダです．
    
 - `Standard`  
    基準となるDICOMファイルをこのフォルダに保存してください．  
    **シングルフレーム**のみ対応です．マルチフレーム(Enhanced DICOM)に対応してほしい場合は申し付けください．  
    また，DICOMに保存されている**画像形式によってはエラーが出ます**．エラーが出た場合には連絡ください．
    
-- `Standard_binary`  
+- `Standard_binary_jpg`  
    ２値化後の基準画像(JPEG)を保存するフォルダです．
+   
+- `Standard_jpg`  
+   ２値化前の基準画像(JPEG)を保存するフォルダです．
    
 - `GDR.csv`  
    GDRを記録したCSVファイルです．

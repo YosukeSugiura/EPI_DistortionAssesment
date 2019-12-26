@@ -87,9 +87,11 @@
 
 1. 上の要件に従って必要なものをインストールしてください．
 
-2. このリポジトリのトップページの右上にある緑色のボタン`Clone or download`→`Download ZIP`を押して，適当なフォルダにリポジトリをダウンロード&解凍してください．
+2. このリポジトリのトップページの右上にある緑色のボタン`Clone or download`→`Download ZIP`を押して，適当なフォルダにリポジトリをダウンロード&解凍してください．  
+   
+   <img src="https://github.com/YosukeSugiura/EPI_DistortionAssesment/blob/master/download.png" width="420px">  
 
-3. 各フォルダ内にデバッグ用のDICOM，JPGファイルが入っています．**自身のデータで実行する場合には不要ですので消してください．**
+3. 解凍したファイル内にあるフォルダ`Distortion`，`Standard`の中にデバッグ用のDICOMファイルがあります．また，`Distortion_binary_jpg`，`Distortiony_jpg`，`Standard_binary_jpg`，`Standard_jpg`の中にデバッグ用のJPGファイルが入っています．**自身のデータで実行する場合にはこれらデバッグ用ファイルは不要ですので消してください．(フォルダは消さないでください)**
 
 4. 基準DICOMファイルを`Standard`フォルダに，評価対象DICOMファイルを`Distortion`フォルダに入れてください．  
 

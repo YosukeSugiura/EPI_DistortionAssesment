@@ -75,9 +75,8 @@ if __name__ == '__main__':
         img_dst = 1 / (2**dst_bit) * img_dst
 
         #   最大値で正規化
-        Max = np.max( [img_std, img_dst] )
-        img_std = 1 / Max * img_std
-        img_dst = 1 / Max * img_dst
+        img_std = 1 / np.max(img_std) * img_std
+        img_dst = 1 / np.max(img_dst) * img_dst
 
         #   ２値化
         binary_std = cv2.threshold(img_std, T, 1, cv2.THRESH_BINARY)[1].astype('float32')

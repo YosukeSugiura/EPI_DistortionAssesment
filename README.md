@@ -100,7 +100,8 @@
 
 ## 2. 実行
 
-1. PyCahrmで`Geometric_Distortion_ratio_v1.py`を開いてください．
+1. PyCahrmで`Geometric_Distortion_ratio_v1.py`を開いてください．  
+   具体的な作業は[こちらの説明](https://github.com/YosukeSugiura/EPI_DistortionAssesment/blob/pycharm/how_to_use_pycharm.md)を見てください．
 
 2. 実行してください．(通常，PyCharmのウィンドウ右上の実行ボタン(緑色の矢印)を押す or メニューバーから`Run`→`Run`，コンテクストメニューから`Geometric_Distortion_ratio_v1`を選択．)
 

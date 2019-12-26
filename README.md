@@ -12,7 +12,9 @@
 
 ## 動作
 
-基準DICOMファイルと，それに対応した歪みのある評価対象DICOMファイルを用意してください．このプログラムは，それらのファイルから画像データのみを抽出して２値化処理を行い，幾何歪み (Geometric Distortion Ratio : GDR) を計算します．計算したGDRはCSVファイルに保存します．
+<img src="https://github.com/YosukeSugiura/EPI_DistortionAssesment/blob/master/flow.png" width="680px">  
+
+基準DICOMファイルと，それに対応した歪みのある評価対象DICOMファイルを用意してください．このプログラムは，それらのファイルから画像データのみを抽出して２値化処理を行い，ファントム領域のみを抽出します．互いのファントム領域から幾何歪み比 (Geometric Distortion Ratio : GDR) を計算します．計算したGDRはCSVファイルに保存します．
 
 より詳しい動作については[PDFファイル](https://github.com/YosukeSugiura/EPI_DistortionAssesment/blob/master/Details_20191225.pdf)をご参考ください．
 

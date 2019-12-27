@@ -56,7 +56,6 @@ if __name__ == '__main__':
     # ------------------------
     fn_std = natsorted(glob.glob(Dir_std + '*.dcm'))   # 基準ファイル名
     fn_dst = natsorted(glob.glob(Dir_dst + '*.dcm'))   # EPIファイル名
-
     
     # ------------------------
     #   フォルダの作成
@@ -65,12 +64,15 @@ if __name__ == '__main__':
         if not os.path.exists(dir_):
             os.mkdir(dir_)
 
-    #   GDRの配列
-    GDR = np.zeros(len(fn_std))
-
-    #   名前の配列
-    Name = []
-
+    # ------------------------
+    #   空配列の作成
+    # ------------------------
+    GDR = np.zeros(len(fn_std))   #   GDRの配列
+    Name = []           #   ファイル名の配列
+    Area_std = np.zeros(len(fn_std))      #   基準画像の面積の配列
+    Area_dst = np.zeros(len(fn_std))      #   評価画像の面積の配列
+    Area_dif = np.zeros(len(fn_std))      #   差分画像の面積の配列
+    
     # ------------------------
     #   ファイルごとの画像処理
     # ------------------------
@@ -82,12 +84,11 @@ if __name__ == '__main__':
         img_std = ds_std.pixel_array
         img_dst = ds_dst.pixel_array
 
-
-        #   正規化
-        # std_bit = ds_std[0x0028, 0x0102].value
-        # dst_bit = ds_dst[0x0028, 0x0102].value
-        # img_std = 1 / (2**std_bit) * img_std
-        # img_dst = 1 / (2**dst_bit) * img_dst
+        #   オブジェクトの読み取り
+        fov_std = ds_std[0x0018, 0x1100].value   # 基準画像のFOV
+        fov_dst = ds_dst[0x0018, 0x1100].value   # 評価画像のFOV
+        mat_std = ds_std[0x0018, 0x1310].value   # 基準画像のMatrix
+        mat_dst = ds_dst[0x0018, 0x1310].value   # 評価画像のMatrix
 
         #   最大値で正規化
         img_std = 1 / np.max(img_std) * img_std
@@ -100,7 +101,14 @@ if __name__ == '__main__':
         #   GDRの計算
         binary_dif = np.abs(binary_std - binary_dst)  # 差分画像
         GDR[i] = np.sum(np.abs(binary_std - binary_dst)) / np.sum(binary_std)
-
+        
+        #   各領域の面積を計算
+        Area_per_pix_std = (mat_std[0] / fov_std) * (mat_std[1] / fov_std) # 基準画像の1ピクセルあたりの面積[mm^2]
+        Area_per_pix_dst = (mat_dst[0] / fov_std) * (mat_dst[1] / fov_std) # 基準画像の1ピクセルあたりの面積[mm^2]
+        Area_std[i] = Area_per_pix_std * np.count_nonzero(binary_std)
+        Area_dst[i] = Area_per_pix_dst * np.count_nonzero(binary_dst)
+        Area_dif[i] = Area_per_pix_dst * np.count_nonzero(binary_dif) # 2枚の画像で1ピクセルあたりの面積は同じと仮定
+        
         # ------------------------
         #   ファイルへの保存
         # ------------------------
@@ -128,6 +136,6 @@ if __name__ == '__main__':
     # ------------------------
     #   CSVファイルへの保存
     # ------------------------
-    Data = np.vstack( [Name, GDR] ).T
-    Data = np.vstack( [ ['File_name','GDR'], Data] )
+    Data = np.vstack( [Name, Area_std, Area_dst, Area_dif, GDR] ).T
+    Data = np.vstack( [ ['File_name','Area_of_standard_phantom[mm^2]','Area_of_distortion_phantom[mm^2]','Area_of_difference[mm^2]','GDR'], Data] )
     np.savetxt('GDR.csv', Data, delimiter=',', fmt="%s")

@@ -33,9 +33,18 @@ Dir_dst_jpg = './Distortion_jpg/'
 Dir_std_bn = './Standard_binary_jpg/'
 Dir_dst_bn = './Distortion_binary_jpg/'
 
+#   差分画像(jpg)を保存するフォルダ
+Dir_dif = './Difference_jpg/'
+
 #   ２値化のしきい値 ( 0 ~ 1 )
 T = 0.5
 
+
+# ========================
+#   一意に決まるパラメータ
+# ========================
+#   ディレクトリ群
+Dirs = [Dir_std_jpg, Dir_dst_jpg, Dir_std_bn, Dir_dst_bn, Dir_dif]
 
 # ========================
 #   メイン関数
@@ -47,8 +56,13 @@ if __name__ == '__main__':
     # ------------------------
     fn_std = natsorted(glob.glob(Dir_std + '*.dcm'))   # 基準ファイル名
     fn_dst = natsorted(glob.glob(Dir_dst + '*.dcm'))   # EPIファイル名
-    #fn_std = glob.glob(Dir_std + '*.jpg')   # 基準ファイル名
-    #fn_dst = glob.glob(Dir_dst + '*.jpg')   # EPIファイル名
+
+    
+    # ------------------------
+    #   フォルダの作成
+    # ------------------------
+    if not os.path.exists('output'):
+        os.mkdir('output')
 
     #   GDRの配列
     GDR = np.zeros(len(fn_std))
@@ -92,7 +106,10 @@ if __name__ == '__main__':
         GDR[i] = np.sum(np.abs(binary_std - binary_dst)) / np.sum(binary_std)
 
         #   ファイル名の取得
+        base_std = os.path.splitext(os.path.basename(fn_std_))[0]  # 基準画像のファイル名(拡張子なし)
+        base_dst = os.path.splitext(os.path.basename(fn_dst_))[0]  # 評価画像のファイル名(拡張子なし)
         Name.append(os.path.splitext(os.path.basename(Dir_std_jpg + os.path.basename(fn_dst_)))[0])
+                         
 
         #   ２値化前の画像の保存
         fn_std_fl = os.path.splitext(Dir_std_jpg + os.path.basename(fn_std_))[0]+'.jpg'
@@ -103,6 +120,11 @@ if __name__ == '__main__':
         #   バイナリ画像の保存
         fn_std_bn = os.path.splitext(Dir_std_bn + os.path.basename(fn_std_))[0]+'.jpg'
         fn_dst_bn = os.path.splitext(Dir_dst_bn + os.path.basename(fn_dst_))[0]+'.jpg'
+        cv2.imwrite(fn_std_bn, (255*binary_std).astype('uint8'))
+        cv2.imwrite(fn_dst_bn, (255*binary_dst).astype('uint8'))
+        
+        #   差分画像の保存
+        fn_dif = Dir_diff + os.path.splitext(os.path.basename(fn_std_)+'-'+os.path.basename(fn_dst_))[0]+'.jpg'
         cv2.imwrite(fn_std_bn, (255*binary_std).astype('uint8'))
         cv2.imwrite(fn_dst_bn, (255*binary_dst).astype('uint8'))
 

@@ -55,8 +55,12 @@
    ２値化前の基準画像(JPEG)を保存するフォルダです．
    
 - `GDR.csv`  
-   GDRを記録したCSVファイルです．
-
+   GDRを記録したCSVファイルです．  
+   下は各列の説明です．
+   
+| File_name | Area_of_standard_phantom[mm^2] | Area_of_distortion[mm^2] | Area_of_difference[mm^2] | GDR |
+|---|---|---|---|---|
+| ファイル名(評価画像) | 基準画像のファントム面積[mm^2] | 評価画像のファントム面積[mm^2] | 差分ファントム面積[mm^2] | 幾何歪比(GDR) |
 
 ## 要件
 

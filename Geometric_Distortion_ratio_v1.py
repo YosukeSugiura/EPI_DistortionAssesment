@@ -61,8 +61,9 @@ if __name__ == '__main__':
     # ------------------------
     #   フォルダの作成
     # ------------------------
-    if not os.path.exists('output'):
-        os.mkdir('output')
+    for dir_ in Dirs:
+        if not os.path.exists(dir_):
+            os.mkdir(dir_)
 
     #   GDRの配列
     GDR = np.zeros(len(fn_std))
@@ -83,10 +84,10 @@ if __name__ == '__main__':
 
 
         #   正規化
-        std_bit = ds_std[0x0028, 0x0102].value
-        dst_bit = ds_dst[0x0028, 0x0102].value
-        img_std = 1 / (2**std_bit) * img_std
-        img_dst = 1 / (2**dst_bit) * img_dst
+        # std_bit = ds_std[0x0028, 0x0102].value
+        # dst_bit = ds_dst[0x0028, 0x0102].value
+        # img_std = 1 / (2**std_bit) * img_std
+        # img_dst = 1 / (2**dst_bit) * img_dst
 
         #   最大値で正規化
         img_std = 1 / np.max(img_std) * img_std
@@ -96,37 +97,33 @@ if __name__ == '__main__':
         binary_std = cv2.threshold(img_std, T, 1, cv2.THRESH_BINARY)[1].astype('float32')
         binary_dst = cv2.threshold(img_dst, T, 1, cv2.THRESH_BINARY)[1].astype('float32')
 
-        #   画像間のずれを補正
-        # d, _ = cv2.phaseCorrelate(binary_dst, binary_std)
-        # M = np.float32([[1, 0, d[0]], [0, 1, d[1]]])
-        # rows, cols = binary_dst.shape
-        # binary_dst = cv2.warpAffine(binary_dst, M, (cols, rows))
-
         #   GDRの計算
+        binary_dif = np.abs(binary_std - binary_dst)  # 差分画像
         GDR[i] = np.sum(np.abs(binary_std - binary_dst)) / np.sum(binary_std)
 
+        # ------------------------
+        #   ファイルへの保存
+        # ------------------------
         #   ファイル名の取得
         base_std = os.path.splitext(os.path.basename(fn_std_))[0]  # 基準画像のファイル名(拡張子なし)
         base_dst = os.path.splitext(os.path.basename(fn_dst_))[0]  # 評価画像のファイル名(拡張子なし)
-        Name.append(os.path.splitext(os.path.basename(Dir_std_jpg + os.path.basename(fn_dst_)))[0])
-                         
+        Name.append(base_dst)   # csvで保存する際の名前列
 
         #   ２値化前の画像の保存
-        fn_std_fl = os.path.splitext(Dir_std_jpg + os.path.basename(fn_std_))[0]+'.jpg'
-        fn_dst_fl = os.path.splitext(Dir_dst_jpg + os.path.basename(fn_dst_))[0]+'.jpg'
+        fn_std_fl = Dir_std_jpg + base_std + '.jpg'
+        fn_dst_fl = Dir_dst_jpg + base_dst + '.jpg'
         cv2.imwrite(fn_std_fl, (255*img_std).astype('uint8'))
         cv2.imwrite(fn_dst_fl, (255*img_dst).astype('uint8'))
 
         #   バイナリ画像の保存
-        fn_std_bn = os.path.splitext(Dir_std_bn + os.path.basename(fn_std_))[0]+'.jpg'
-        fn_dst_bn = os.path.splitext(Dir_dst_bn + os.path.basename(fn_dst_))[0]+'.jpg'
+        fn_std_bn = Dir_std_bn + base_std + '.jpg'
+        fn_dst_bn = Dir_dst_bn + base_dst + '.jpg'
         cv2.imwrite(fn_std_bn, (255*binary_std).astype('uint8'))
         cv2.imwrite(fn_dst_bn, (255*binary_dst).astype('uint8'))
         
         #   差分画像の保存
-        fn_dif = Dir_diff + os.path.splitext(os.path.basename(fn_std_)+'-'+os.path.basename(fn_dst_))[0]+'.jpg'
-        cv2.imwrite(fn_std_bn, (255*binary_std).astype('uint8'))
-        cv2.imwrite(fn_dst_bn, (255*binary_dst).astype('uint8'))
+        fn_dif = Dir_dif + base_std + '-' + base_dst + '.jpg'
+        cv2.imwrite(fn_dif, (255*binary_dif).astype('uint8'))
 
     # ------------------------
     #   CSVファイルへの保存
@@ -134,5 +131,3 @@ if __name__ == '__main__':
     Data = np.vstack( [Name, GDR] ).T
     Data = np.vstack( [ ['File_name','GDR'], Data] )
     np.savetxt('GDR.csv', Data, delimiter=',', fmt="%s")
-
-

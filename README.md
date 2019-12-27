@@ -28,7 +28,10 @@
 
 - `Geometric_Distortion_ratio_v1.py`  
    メインの実行ファイルです．
-   
+
+- `Difference_jpg`  
+   差分画像(JPEG)を保存するフォルダです．
+
 - `Distortion`  
    評価対象のDICOMファイルをこのフォルダに保存してください．  
    **シングルフレーム**のみ対応です．マルチフレーム(Enhanced DICOM)に対応してほしい場合は申し付けください．  
@@ -91,7 +94,7 @@
    
    <img src="https://github.com/YosukeSugiura/EPI_DistortionAssesment/blob/master/download.png" width="420px">  
 
-3. 解凍したファイル内にあるフォルダ`Distortion`，`Standard`の中にデバッグ用のDICOMファイルがあります．また，`Distortion_binary_jpg`，`Distortiony_jpg`，`Standard_binary_jpg`，`Standard_jpg`の中にデバッグ用のJPGファイルが入っています．**自身のデータで実行する場合にはこれらデバッグ用ファイルは不要ですので消してください．(フォルダは消さないでください)**
+3. 解凍したファイル内にあるフォルダ`Distortion`，`Standard`の中にデバッグ用のDICOMファイルがあります．また，`Distortion_binary_jpg`，`Distortiony_jpg`，`Standard_binary_jpg`，`Standard_jpg`の中にデバッグ用のJPGファイルが入っています．**自身のデータで実行する場合にはこれらデバッグ用ファイルは不要ですので消してください．**
 
 4. 基準DICOMファイルを`Standard`フォルダに，評価対象DICOMファイルを`Distortion`フォルダに入れてください．  
 
@@ -111,7 +114,9 @@
 
 2. ２値化前の評価対象画像(.jpg)を`Distortion`に保存します．２値化後の評価対象画像(.jpg)を`Distortion_binary`に保存します．
 
-3. GDRの結果を`GDR.csv`として保存します．
+3. ２枚の画像の差分画像を`Difference_jpg`に保存します．
+
+4. GDRの結果を`GDR.csv`として保存します．
 
 
 # 設定

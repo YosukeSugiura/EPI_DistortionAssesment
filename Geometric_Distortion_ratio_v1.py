@@ -90,6 +90,9 @@ if __name__ == '__main__':
         img_std = 1 / np.max(img_std) * img_std
         img_dst = 1 / np.max(img_dst) * img_dst
 
+　　　　　#   リサイズして歪画像を基準画像と同じ大きさに
+        img_dst = cv2.resize(img_dst, mat_std, interpolation = cv2.INTER_CUBIC)
+
         #   ２値化
         binary_std = cv2.threshold(img_std, T, 1, cv2.THRESH_BINARY)[1].astype('float32')
         binary_dst = cv2.threshold(img_dst, T, 1, cv2.THRESH_BINARY)[1].astype('float32')

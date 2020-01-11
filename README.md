@@ -98,7 +98,7 @@
    
    <img src="https://github.com/YosukeSugiura/EPI_DistortionAssesment/blob/master/download.png" width="420px">  
 
-3. 解凍したファイル内にあるフォルダ`Distortion`，`Standard`の中にデバッグ用のDICOMファイルがあります．また，`Distortion_binary_jpg`，`Distortiony_jpg`，`Standard_binary_jpg`，`Standard_jpg`の中にデバッグ用のJPGファイルが入っています．**自身のデータで実行する場合にはこれらデバッグ用ファイルは不要ですので消してください．**
+3. 解凍したファイル内にあるフォルダ`Distortion`，`Standard`の中にデバッグ用のDICOMファイルがあります．また，`Difference_jpg`，`Distortion_binary_jpg`，`Distortiony_jpg`，`Standard_binary_jpg`，`Standard_jpg`の中にデバッグ用のJPGファイルが入っています．**自身のデータで実行する場合にはこれらデバッグ用ファイルは不要ですので消してください．**
 
 4. 基準DICOMファイルを`Standard`フォルダに，評価対象DICOMファイルを`Distortion`フォルダに入れてください．  
 
@@ -131,5 +131,5 @@
   `Geometric_Distortion_ratio_v1.py`のパラメータ`T`で，２値化処理のしきい値を変更できます．**0~1**の間で指定してください．
   
   ``` 
-  T = 0.5 
+  T = 0.
   ```

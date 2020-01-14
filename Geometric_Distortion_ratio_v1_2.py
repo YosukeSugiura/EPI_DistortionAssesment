@@ -68,7 +68,7 @@ if __name__ == '__main__':
     Name_std = []  # ファイル名の配列
     Name_dst = []
     Area_std = np.zeros(len(fn_std))  # 基準画像の面積の配列
-    Area_dst = np.zeros(len(fn_std))  # 評価画像の面積の配列
+    Area_dst = np.zeros(len(fn_dst))  # 評価画像の面積の配列
     Area_dif = np.zeros(len(fn_std))  # 差分画像の面積の配列
 
     # ------------------------
@@ -101,8 +101,8 @@ if __name__ == '__main__':
         GDR[i] = np.sum(np.abs(binary_std - binary_dst)) / np.sum(binary_std)
 
         #   各領域の面積を計算
-        Area_per_pix_std = (img_std.shape[0] / fov_std) * (img_std.shape[1] / fov_std)  # 基準画像の1ピクセルあたりの面積[mm^2]
-        Area_per_pix_dst = (img_dst.shape[0] / fov_dst) * (img_dst.shape[1] / fov_dst)  # 基準画像の1ピクセルあたりの面積[mm^2]
+        Area_per_pix_std = (fov_std / img_std.shape[0]) * (fov_std / img_std.shape[1])  # 基準画像の1ピクセルあたりの面積[mm^2]
+        Area_per_pix_dst = (fov_dst / img_dst.shape[0]) * (fov_dst / img_dst.shape[1])  # 基準画像の1ピクセルあたりの面積[mm^2]
         Area_std[i] = Area_per_pix_std * np.count_nonzero(binary_std)
         Area_dst[i] = Area_per_pix_dst * np.count_nonzero(binary_dst)
         Area_dif[i] = Area_per_pix_dst * np.count_nonzero(binary_dif)  # 2枚の画像で1ピクセルあたりの面積は同じと仮定

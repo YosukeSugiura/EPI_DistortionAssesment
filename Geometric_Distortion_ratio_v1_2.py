@@ -102,7 +102,7 @@ if __name__ == '__main__':
 
         #   各領域の面積を計算
         Area_per_pix_std = (img_std.shape[0] / fov_std) * (img_std.shape[1] / fov_std)  # 基準画像の1ピクセルあたりの面積[mm^2]
-        Area_per_pix_dst = (img_dst.shape[0] / fov_std) * (img_dst.shape[1] / fov_std)  # 基準画像の1ピクセルあたりの面積[mm^2]
+        Area_per_pix_dst = (img_dst.shape[0] / fov_dst) * (img_dst.shape[1] / fov_dst)  # 基準画像の1ピクセルあたりの面積[mm^2]
         Area_std[i] = Area_per_pix_std * np.count_nonzero(binary_std)
         Area_dst[i] = Area_per_pix_dst * np.count_nonzero(binary_dst)
         Area_dif[i] = Area_per_pix_dst * np.count_nonzero(binary_dif)  # 2枚の画像で1ピクセルあたりの面積は同じと仮定

@@ -13,7 +13,9 @@ import glob
 import cv2
 import numpy as np
 import pydicom as dcm
+from skimage.filters import *
 from natsort import natsorted
+
 
 # ========================
 #   設定
@@ -33,9 +35,6 @@ Dir_dst_bn = './Distortion_binary_jpg/'
 
 #   差分画像(jpg)を保存するフォルダ
 Dir_dif = './Difference_jpg/'
-
-#   ２値化のしきい値 ( 0 ~ 1 )
-T = 0.1
 
 # ========================
 #   一意に決まるパラメータ
@@ -86,15 +85,15 @@ if __name__ == '__main__':
         fov_dst = ds_dst[0x0018, 0x1100].value  # 評価画像のFOV
 
         #   最大値で正規化
-        img_std = 1 / np.max(img_std) * img_std
-        img_dst = 1 / np.max(img_dst) * img_dst
+        img_std = (255 / np.max(img_std) * img_std).astype(np.uint8)
+        img_dst = (255 / np.max(img_dst) * img_dst).astype(np.uint8)
 
         #   リサイズして歪画像を基準画像と同じ大きさに
         img_dst = cv2.resize(img_dst, img_std.shape,  interpolation = cv2.INTER_CUBIC)
 
         #   ２値化
-        binary_std = cv2.threshold(img_std, T, 1, cv2.THRESH_BINARY)[1].astype('float32')
-        binary_dst = cv2.threshold(img_dst, T, 1, cv2.THRESH_BINARY)[1].astype('float32')
+        binary_std = 255*(img_std > threshold_minimum(img_std)).astype(np.float32)
+        binary_dst = 255*(img_dst > threshold_minimum(img_dst)).astype(np.float32)
 
         #   GDRの計算
         binary_dif = np.abs(binary_std - binary_dst)  # 差分画像
@@ -119,18 +118,18 @@ if __name__ == '__main__':
         #   ２値化前の画像の保存
         fn_std_fl = Dir_std_jpg + base_std + '.jpg'
         fn_dst_fl = Dir_dst_jpg + base_dst + '.jpg'
-        cv2.imwrite(fn_std_fl, (255 * img_std).astype('uint8'))
-        cv2.imwrite(fn_dst_fl, (255 * img_dst).astype('uint8'))
+        cv2.imwrite(fn_std_fl, img_std.astype('uint8'))
+        cv2.imwrite(fn_dst_fl, img_dst.astype('uint8'))
 
         #   バイナリ画像の保存
         fn_std_bn = Dir_std_bn + base_std + '.jpg'
         fn_dst_bn = Dir_dst_bn + base_dst + '.jpg'
-        cv2.imwrite(fn_std_bn, (255 * binary_std).astype('uint8'))
-        cv2.imwrite(fn_dst_bn, (255 * binary_dst).astype('uint8'))
+        cv2.imwrite(fn_std_bn, binary_std.astype('uint8'))
+        cv2.imwrite(fn_dst_bn, binary_dst.astype('uint8'))
 
         #   差分画像の保存
         fn_dif = Dir_dif + base_std + '-' + base_dst + '.jpg'
-        cv2.imwrite(fn_dif, (255 * binary_dif).astype('uint8'))
+        cv2.imwrite(fn_dif, binary_dif.astype('uint8'))
 
     # ------------------------
     #   CSVファイルへの保存

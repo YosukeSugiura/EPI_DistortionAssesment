@@ -29,6 +29,7 @@ pip3 install --upgrade pip
 pip3 install --upgrade numpy
 pip3 install --upgrade opencv-python
 pip3 install --upgrade pillow
+pip3 install --upgrade scikit-image
 pip3 install --upgrade pydicom
 pip3 install --upgrade natsort
 ```

@@ -29,12 +29,12 @@
   > C. A. Glasbey, “An analysis of histogram-based thresholding algorithms,” CVGIP: Graphical Models and Image Processing, vol. 55, pp. 532-537, 1993.
   
   5. **差分画像の面積の導出**  
-  ２値化された基準画像と歪み画像の差分により，差分画像を求める．次に，FOVと画素マトリックスの値から1ピクセルあたりの面積を求める．算出式は次の通り．  
-  <a href="https://www.codecogs.com/eqnedit.php?latex=\dpi{120}&space;\small&space;{\rm&space;Area&space;\&space;per&space;\&space;Pixel}&space;\&space;{\rm&space;[mm^2/pixel]}&space;=&space;\frac{{\rm&space;(FOV)^2&space;\&space;[mm^2]}}{{\rm&space;Number&space;\&space;of&space;\&space;Pixels}&space;\&space;[{\rm&space;pixels}]}" target="_blank"><img src="https://latex.codecogs.com/png.latex?\dpi{120}&space;\small&space;{\rm&space;Area&space;\&space;per&space;\&space;Pixel}&space;\&space;{\rm&space;[mm^2/pixel]}&space;=&space;\frac{{\rm&space;(FOV)^2&space;\&space;[mm^2]}}{{\rm&space;Number&space;\&space;of&space;\&space;Pixels}&space;\&space;[{\rm&space;pixels}]}" title="\small {\rm Area \ per \ Pixel} \ {\rm [mm^2/pixel]} = \frac{{\rm (FOV)^2 \ [mm^2]}}{{\rm Number \ of \ Pixels} \ [{\rm pixels}]}" /></a>
+  ２値化された基準画像と歪み画像の差分により，差分画像を求める．
   
   6. **GDRの算出**  
-  差分画像と基準画像の領域面積を基に，幾何歪み比(Geometric Distortion Ratio : GDR)を算出する．算出式は，    
-  歪のない領域を A，歪のある領域を B とすると，以下の通りである．  
+  まず，FOVと画素マトリックスの値から1ピクセルあたりの面積を求める．算出式は次の通り．  
+  <a href="https://www.codecogs.com/eqnedit.php?latex=\dpi{120}&space;\small&space;{\rm&space;Area&space;\&space;per&space;\&space;Pixel}&space;\&space;{\rm&space;[mm^2/pixel]}&space;=&space;\frac{{\rm&space;(FOV)^2&space;\&space;[mm^2]}}{{\rm&space;Number&space;\&space;of&space;\&space;Pixels}&space;\&space;[{\rm&space;pixels}]}" target="_blank"><img src="https://latex.codecogs.com/png.latex?\dpi{120}&space;\small&space;{\rm&space;Area&space;\&space;per&space;\&space;Pixel}&space;\&space;{\rm&space;[mm^2/pixel]}&space;=&space;\frac{{\rm&space;(FOV)^2&space;\&space;[mm^2]}}{{\rm&space;Number&space;\&space;of&space;\&space;Pixels}&space;\&space;[{\rm&space;pixels}]}" title="\small {\rm Area \ per \ Pixel} \ {\rm [mm^2/pixel]} = \frac{{\rm (FOV)^2 \ [mm^2]}}{{\rm Number \ of \ Pixels} \ [{\rm pixels}]}" /></a>  
+  次に，差分画像と基準画像におけるファントム領域の面積を求め，それらの面積比から幾何歪み比(Geometric Distortion Ratio : GDR)を算出する．算出式は，   歪のない領域を A，歪のある領域を B とすると，以下の通りである．  
   <a href="https://www.codecogs.com/eqnedit.php?latex=\dpi{120}&space;\small&space;GDR&space;=&space;\frac{{\rm&space;area}\big[(&space;A&space;-&space;B&space;)&space;\cup&space;(&space;B&space;-&space;A&space;)\big]&space;}{&space;{\rm&space;area}[A]&space;}" target="_blank"><img src="https://latex.codecogs.com/gif.latex?\dpi{120}&space;\small&space;GDR&space;=&space;\frac{{\rm&space;area}\big[(&space;A&space;-&space;B&space;)&space;\cup&space;(&space;B&space;-&space;A&space;)\big]&space;}{&space;{\rm&space;area}[A]&space;}" title="\small GDR = \frac{{\rm area}\big[( A - B ) \cup ( B - A )\big] }{ {\rm area}[A] }" /></a>
   
   7. **保存**  

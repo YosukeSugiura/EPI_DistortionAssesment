@@ -1,6 +1,6 @@
 # EPIの自動歪評価
 
-**EPIの歪評価を自動で行う**プログラムです．  
+歪みのない基準画像と歪みのあるEPI画像を比較し，**EPIの歪評価を自動で行う**プログラムです．  
 手っ取り早く実行したいなら，**# 実行方法** からご覧ください．
 
 以下の論文を参考に作成しました．
@@ -14,13 +14,34 @@
 
 <img src="https://github.com/YosukeSugiura/EPI_DistortionAssesment/blob/master/flow.png" width="680px">  
 
-基準DICOMファイルと，それに対応した歪みのある評価対象DICOMファイルを用意してください．このプログラムは，それらのファイルから画像データのみを抽出して２値化処理を行い，ファントム領域のみを抽出します．互いのファントム領域から幾何歪み比 (Geometric Distortion Ratio : GDR) を計算します．計算したGDRはCSVファイルに保存します．
+  1. **読み込み**  
+  `Standard`，`Distortion`のDICOMファイルから画像データを読み込む．
 
-より詳しい動作については[PDFファイル](https://github.com/YosukeSugiura/EPI_DistortionAssesment/blob/master/Details_20191225.pdf)をご参考ください．
+  2. **画素値の正規化**  
+  それぞれの画像で，最大の画素値が`255`となるように画素値を正規化する．数式で表すと以下の通り．  
+  <a href="https://www.codecogs.com/eqnedit.php?latex=\dpi{200}&space;\tiny&space;\hat{X}_{i,j}&space;=&space;255\frac{X_{i,j}}{\max&space;[&space;X_{i,j}]}" target="_blank"><img src="https://latex.codecogs.com/png.latex?\dpi{200}&space;\tiny&space;\hat{X}_{i,j}&space;=&space;255\frac{X_{i,j}}{\max&space;[&space;X_{i,j}]}" title="\tiny \hat{X}_{i,j} = 255\frac{X_{i,j}}{\max [ X_{i,j}]}" /></a>
+  
+  3. **画像のリサイズ**  
+  歪み画像と基準画像で画素マトリックスサイズが異なる場合，画素マトリックスサイズが等しくなるように歪み画像をリサイズする．  
+  
+  4. **２値化**  
+  基準画像と歪み画像を，Minimim法に基づき２値化する．具体的な処理は`scikit-image`の[`skimage.filters.threshold_minimum`](https://scikit-image.org/docs/dev/api/skimage.filters.html#threshold-minimum)の項を参照のこと．この手法の原著は下の通り．  
+  > C. A. Glasbey, “An analysis of histogram-based thresholding algorithms,” CVGIP: Graphical Models and Image Processing, vol. 55, pp. 532-537, 1993.
+  
+  5. **差分画像の面積の導出**  
+  ２値化された基準画像と歪み画像の差分により，差分画像を求める．
+  
+  6. **GDRの算出**  
+  まず，FOVと画素マトリックスの値から1ピクセルあたりの面積を求める．算出式は次の通り．  
+  <a href="https://www.codecogs.com/eqnedit.php?latex=\dpi{120}&space;\small&space;{\rm&space;Area&space;\&space;per&space;\&space;Pixel}&space;\&space;{\rm&space;[mm^2/pixel]}&space;=&space;\frac{{\rm&space;(FOV)^2&space;\&space;[mm^2]}}{{\rm&space;Number&space;\&space;of&space;\&space;Pixels}&space;\&space;[{\rm&space;pixels}]}" target="_blank"><img src="https://latex.codecogs.com/png.latex?\dpi{120}&space;\small&space;{\rm&space;Area&space;\&space;per&space;\&space;Pixel}&space;\&space;{\rm&space;[mm^2/pixel]}&space;=&space;\frac{{\rm&space;(FOV)^2&space;\&space;[mm^2]}}{{\rm&space;Number&space;\&space;of&space;\&space;Pixels}&space;\&space;[{\rm&space;pixels}]}" title="\small {\rm Area \ per \ Pixel} \ {\rm [mm^2/pixel]} = \frac{{\rm (FOV)^2 \ [mm^2]}}{{\rm Number \ of \ Pixels} \ [{\rm pixels}]}" /></a>  
+  次に，差分画像と基準画像におけるファントム領域の面積をそれぞれ求め，それらの面積比から幾何歪み比(Geometric Distortion Ratio : GDR)を算出する．算出式は，   歪のない領域を A，歪のある領域を B とすると，以下の通りである．  
+  <a href="https://www.codecogs.com/eqnedit.php?latex=\dpi{120}&space;\small&space;GDR&space;=&space;\frac{{\rm&space;area}\big[(&space;A&space;-&space;B&space;)&space;\cup&space;(&space;B&space;-&space;A&space;)\big]&space;}{&space;{\rm&space;area}[A]&space;}" target="_blank"><img src="https://latex.codecogs.com/gif.latex?\dpi{120}&space;\small&space;GDR&space;=&space;\frac{{\rm&space;area}\big[(&space;A&space;-&space;B&space;)&space;\cup&space;(&space;B&space;-&space;A&space;)\big]&space;}{&space;{\rm&space;area}[A]&space;}" title="\small GDR = \frac{{\rm area}\big[( A - B ) \cup ( B - A )\big] }{ {\rm area}[A] }" /></a>
+  
+  7. **保存**  
+  各画像データをbmp形式で保存する．GDRデータをcsv形式で保存する．
 
-> Geometric Distortion Ratio  
-> 　歪のないファントム領域を A，歪のあるファントム領域を B とすると，以下の式でGDRを計算する．  
-> 　GDR = area( ( A - B ) ∪ ( B - A ) ) / area( A )
+
+[PDFファイル](https://github.com/YosukeSugiura/EPI_DistortionAssesment/blob/master/Details_20191225.pdf)もご参考ください．
 
 ## ファイル構成
 
@@ -29,30 +50,30 @@
 - `Geometric_Distortion_ratio_v1.py`  
    メインの実行ファイルです．
 
-- `Difference_jpg`  
-   差分画像(JPEG)を保存するフォルダです．
+- `Difference_bmp`  
+   差分画像(bmp)を保存するフォルダです．
 
 - `Distortion`  
    評価対象のDICOMファイルをこのフォルダに保存してください．  
    **シングルフレーム**のみ対応です．マルチフレーム(Enhanced DICOM)に対応してほしい場合は申し付けください．  
    また，DICOMに保存されている**画像形式によってはエラーが出ます**．エラーが出た場合には連絡ください．
    
-- `Distortion_binary_jpg`  
-   ２値化後の評価対象画像(JPEG)を保存するフォルダです．
+- `Distortion_binary_bmp`  
+   ２値化後の評価対象画像(bmp)を保存するフォルダです．
    
-- `Distortion_jpg`  
-   ２値化前の評価対象画像(JPEG)を保存するフォルダです．
+- `Distortion_bmp`  
+   ２値化前の評価対象画像(bmp)を保存するフォルダです．
    
 - `Standard`  
    基準となるDICOMファイルをこのフォルダに保存してください．  
    **シングルフレーム**のみ対応です．マルチフレーム(Enhanced DICOM)に対応してほしい場合は申し付けください．  
    また，DICOMに保存されている**画像形式によってはエラーが出ます**．エラーが出た場合には連絡ください．
    
-- `Standard_binary_jpg`  
-   ２値化後の基準画像(JPEG)を保存するフォルダです．
+- `Standard_binary_bmp`  
+   ２値化後の基準画像(bmp)を保存するフォルダです．
    
-- `Standard_jpg`  
-   ２値化前の基準画像(JPEG)を保存するフォルダです．
+- `Standard_bmp`  
+   ２値化前の基準画像(bmp)を保存するフォルダです．
    
 - `GDR.csv`  
    GDRを記録したCSVファイルです．  
@@ -78,6 +99,7 @@
 - `opencv-python`
 - `pillow`
 - `pydicom`
+- `scikit-image`
 - `natsort`  
 
   → こちらも確認 [[How to install Modules]](https://github.com/YosukeSugiura/EPI_DistortionAssesment/blob/master/How2Install_Python.md#2--python-module-installation)
@@ -98,7 +120,7 @@
    
    <img src="https://github.com/YosukeSugiura/EPI_DistortionAssesment/blob/master/download.png" width="420px">  
 
-3. 解凍したファイル内にあるフォルダ`Distortion`，`Standard`の中にデバッグ用のDICOMファイルがあります．また，`Difference_jpg`，`Distortion_binary_jpg`，`Distortiony_jpg`，`Standard_binary_jpg`，`Standard_jpg`の中にデバッグ用のJPGファイルが入っています．**自身のデータで実行する場合にはこれらデバッグ用ファイルは不要ですので消してください．**
+3. 解凍したファイル内にあるフォルダ`Distortion`，`Standard`の中にデバッグ用のDICOMファイルがあります．また，`Difference_bmp`，`Distortion_binary_bmp`，`Distortiony_bmp`，`Standard_binary_bmp`，`Standard_bmp`の中にデバッグ用のBMPファイルが入っています．**自身のデータで実行する場合にはこれらデバッグ用ファイルは不要ですので消してください．**
 
 4. 基準DICOMファイルを`Standard`フォルダに，評価対象DICOMファイルを`Distortion`フォルダに入れてください．  
 
@@ -114,11 +136,11 @@
 
 ## 3. 結果
 
-1. ２値化前の基準画像(.jpg)を`Standard`に保存します．２値化後の基準画像(.jpg)を`Standard_binary`に保存します．
+1. ２値化前の基準画像(.bmp)を`Standard_bmp`に保存します．２値化後の基準画像(.bmp)を`Standard_binary_bmp`に保存します．
 
-2. ２値化前の評価対象画像(.jpg)を`Distortion`に保存します．２値化後の評価対象画像(.jpg)を`Distortion_binary`に保存します．
+2. ２値化前の評価対象画像(.bmp)を`Distortion_bmp`に保存します．２値化後の評価対象画像(.bmp)を`Distortion_binary_bmp`に保存します．
 
-3. ２枚の画像の差分画像を`Difference_jpg`に保存します．
+3. ２枚の画像の差分画像(.bmp)を`Difference_bmp`に保存します．
 
 4. GDRの結果を`GDR.csv`として保存します．
 
@@ -127,9 +149,11 @@
 
 いくつかのパラメータが制御可能です．
 
-- **２値化を行う際のしきい値**  
-  `Geometric_Distortion_ratio_v1.py`のパラメータ`T`で，２値化処理のしきい値を変更できます．**0~1**の間で指定してください．
-  
+- **差分画像に輪郭線を描写する**  
+  差分画像に輪郭線を描写したい場合，`Geometric_Distortion_ratio_v1_4.py`のパラメータ`boder_display`を`True`にしてください．
+  `False`の場合，輪郭線を描写しません．
   ``` 
-  T = 0.1
+  boder_display = True
   ```
+  - 赤の輪郭線 : 基準画像の輪郭線  
+  - 緑の輪郭線 : 歪画像の輪郭線  

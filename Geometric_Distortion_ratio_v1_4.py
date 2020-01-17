@@ -13,7 +13,9 @@ import glob
 import cv2
 import numpy as np
 import pydicom as dcm
-from skimage.filters import *
+import skimage.filters as skf
+import skimage.measure as skm
+import skimage.color as skc
 from natsort import natsorted
 
 
@@ -25,22 +27,25 @@ from natsort import natsorted
 Dir_std = './Standard/'
 Dir_dst = './Distortion/'
 
-#   処理前の画像(jpg)を保存するフォルダ
-Dir_std_jpg = './Standard_jpg/'
-Dir_dst_jpg = './Distortion_jpg/'
+#   処理前の画像(bmp)を保存するフォルダ
+Dir_std_bmp = './Standard_bmp/'
+Dir_dst_bmp = './Distortion_bmp/'
 
-#   処理前の画像(jpg)を保存するフォルダ
-Dir_std_bn = './Standard_binary_jpg/'
-Dir_dst_bn = './Distortion_binary_jpg/'
+#   処理前の画像(bmp)を保存するフォルダ
+Dir_std_bn = './Standard_binary_bmp/'
+Dir_dst_bn = './Distortion_binary_bmp/'
 
-#   差分画像(jpg)を保存するフォルダ
-Dir_dif = './Difference_jpg/'
+#   差分画像(bmp)を保存するフォルダ
+Dir_dif = './Difference_bmp/'
+
+#   差分画像に縁をつけるか
+boder_display = True
 
 # ========================
 #   一意に決まるパラメータ
 # ========================
 #   ディレクトリ群
-Dirs = [Dir_std_jpg, Dir_dst_jpg, Dir_std_bn, Dir_dst_bn, Dir_dif]
+Dirs = [Dir_std_bmp, Dir_dst_bmp, Dir_std_bn, Dir_dst_bn, Dir_dif]
 
 # ========================
 #   メイン関数
@@ -92,12 +97,12 @@ if __name__ == '__main__':
         img_dst = cv2.resize(img_dst, img_std.shape,  interpolation = cv2.INTER_CUBIC)
 
         #   ２値化
-        binary_std = 255*(img_std > threshold_minimum(img_std)).astype(np.float32)
-        binary_dst = 255*(img_dst > threshold_minimum(img_dst)).astype(np.float32)
+        binary_std = 255*(img_std > skf.threshold_minimum(img_std)).astype(np.uint8)
+        binary_dst = 255*(img_dst > skf.threshold_minimum(img_dst)).astype(np.uint8)
 
         #   GDRの計算
-        binary_dif = np.abs(binary_std - binary_dst)  # 差分画像
-        GDR[i] = np.sum(np.abs(binary_std - binary_dst)) / np.sum(binary_std)
+        binary_dif = np.abs(binary_std.astype(np.float) - binary_dst.astype(np.float)).astype(np.uint8)  # 差分画像
+        GDR[i] = np.sum(binary_dif) / np.sum(binary_std)
 
         #   各領域の面積を計算
         Area_per_pix_std = (fov_std / img_std.shape[0]) * (fov_std / img_std.shape[1])  # 基準画像の1ピクセルあたりの面積[mm^2]
@@ -116,20 +121,34 @@ if __name__ == '__main__':
         Name_dst.append(base_dst +'.dcm')  # csvで保存する際の名前列
 
         #   ２値化前の画像の保存
-        fn_std_fl = Dir_std_jpg + base_std + '.jpg'
-        fn_dst_fl = Dir_dst_jpg + base_dst + '.jpg'
-        cv2.imwrite(fn_std_fl, img_std.astype('uint8'))
-        cv2.imwrite(fn_dst_fl, img_dst.astype('uint8'))
+        fn_std_fl = Dir_std_bmp + base_std + '.bmp'
+        fn_dst_fl = Dir_dst_bmp + base_dst + '.bmp'
+        cv2.imwrite(fn_std_fl, img_std)
+        cv2.imwrite(fn_dst_fl, img_dst)
 
         #   バイナリ画像の保存
-        fn_std_bn = Dir_std_bn + base_std + '.jpg'
-        fn_dst_bn = Dir_dst_bn + base_dst + '.jpg'
-        cv2.imwrite(fn_std_bn, binary_std.astype('uint8'))
-        cv2.imwrite(fn_dst_bn, binary_dst.astype('uint8'))
+        fn_std_bn = Dir_std_bn + base_std + '.bmp'
+        fn_dst_bn = Dir_dst_bn + base_dst + '.bmp'
+        cv2.imwrite(fn_std_bn, binary_std)
+        cv2.imwrite(fn_dst_bn, binary_dst)
 
         #   差分画像の保存
-        fn_dif = Dir_dif + base_std + '-' + base_dst + '.jpg'
-        cv2.imwrite(fn_dif, binary_dif.astype('uint8'))
+        fn_dif = Dir_dif + base_std + '-' + base_dst + '.bmp'
+        cv2.imwrite(fn_dif, binary_dif)
+
+        ##  オプション：差分画像に２つの領域の縁を追加する．
+        if boder_display:
+            binary_dif = skc.gray2rgb(binary_dif)   # バイナリ差分画像を一旦，カラー画像に変換
+            mode = cv2.RETR_LIST                    # 輪郭線の抽出モード (謎，変更しないで)
+            method = cv2.CHAIN_APPROX_NONE          # 輪郭線の抽出方法 (チェイン法で枠線を抽出)
+
+            contour_std, _ = cv2.findContours(binary_std, mode, method)      # 基準画像の輪郭線
+            contour_dst, _ = cv2.findContours(binary_dst, mode, method)      # 歪み画像の輪郭線
+
+            binary_dif = cv2.drawContours(binary_dif, contour_std, -1, (0, 0, 250), 2)  # 基準画像の輪郭線を描写 (赤)
+            binary_dif = cv2.drawContours(binary_dif, contour_dst, -1, (0, 250, 0), 2)  # 基準画像の輪郭線を描写 (緑)
+            cv2.imwrite(fn_dif, binary_dif)
+
 
     # ------------------------
     #   CSVファイルへの保存

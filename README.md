@@ -157,5 +157,6 @@
   ```
   - 赤の輪郭線 : 基準画像の輪郭線  
   - 緑の輪郭線 : 歪画像の輪郭線  
+  - 白の領域 : 差分領域
   
   <img src="https://github.com/YosukeSugiura/EPI_DistortionAssesment/blob/master/diff_with_contour.bmp" width="400px">  

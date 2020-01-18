@@ -150,11 +150,20 @@
 いくつかのパラメータが制御可能です．
 
 - **差分画像に輪郭線を描写する**  
-  差分画像に輪郭線を描写したい場合，`Geometric_Distortion_ratio_v1_4.py`のパラメータ`boder_display`を`True`にしてください．
+  差分画像に輪郭線を描写したい場合，`Geometric_Distortion_ratio_v1_4.py`の42行目、パラメータ`boder_display`を`True`にしてください．
   `False`の場合，輪郭線を描写しません．
+
+  - 輪郭線を非表示する場合 :
+  ``` 
+  boder_display = False
+  ```
+
+  - 輪郭線を表示にする場合 :
+
   ``` 
   boder_display = True
   ```
+ 
   - 赤の輪郭線 : 基準画像の輪郭線  
   - 緑の輪郭線 : 歪画像の輪郭線  
   - 白の領域 : 差分領域

@@ -1,6 +1,6 @@
 # EPIの自動歪評価
 
-歪みのない基準画像と歪みのあるEPI画像を比較し，**EPIの歪評価を自動で行う**プログラムです．  
+歪みのない基準画像と歪みのあるEPI画像を比較し，**EPIの歪に対する評価値を自動で算出する**プログラムです．  
 手っ取り早く実行したいなら，**# 実行方法** からご覧ください．
 
 以下の論文を参考に作成しました．
@@ -19,7 +19,7 @@
 
   2. **画素値の正規化**  
   それぞれの画像で，最大の画素値が`255`となるように画素値を正規化する．数式で表すと以下の通り．  
-  <a href="https://www.codecogs.com/eqnedit.php?latex=\dpi{200}&space;\tiny&space;\hat{X}_{i,j}&space;=&space;255\frac{X_{i,j}}{\max&space;[&space;X_{i,j}]}" target="_blank"><img src="https://latex.codecogs.com/png.latex?\dpi{200}&space;\tiny&space;\hat{X}_{i,j}&space;=&space;255\frac{X_{i,j}}{\max&space;[&space;X_{i,j}]}" title="\tiny \hat{X}_{i,j} = 255\frac{X_{i,j}}{\max [ X_{i,j}]}" /></a>
+  <a href="https://www.codecogs.com/eqnedit.php?latex=\dpi{120}&space;\small&space;\hat{X}_{i,j}&space;=&space;255\frac{X_{i,j}}{\max&space;[&space;X_{i,j}]}" target="_blank"><img src="https://latex.codecogs.com/png.latex?\dpi{200}&space;\tiny&space;\hat{X}_{i,j}&space;=&space;255\frac{X_{i,j}}{\max&space;[&space;X_{i,j}]}" title="\tiny \hat{X}_{i,j} = 255\frac{X_{i,j}}{\max [ X_{i,j}]}" /></a>
   
   3. **画像のリサイズ**  
   歪み画像と基準画像で画素マトリックスサイズが異なる場合，画素マトリックスサイズが等しくなるように歪み画像をリサイズする．  
@@ -28,7 +28,7 @@
   基準画像と歪み画像を，Minimim法に基づき２値化する．具体的な処理は`scikit-image`の[`skimage.filters.threshold_minimum`](https://scikit-image.org/docs/dev/api/skimage.filters.html#threshold-minimum)の項を参照のこと．この手法の原著は下の通り．  
   > C. A. Glasbey, “An analysis of histogram-based thresholding algorithms,” CVGIP: Graphical Models and Image Processing, vol. 55, pp. 532-537, 1993.
   
-  5. **差分画像の面積の導出**  
+  5. **差分画像の導出**  
   ２値化された基準画像と歪み画像の差分により，差分画像を求める．
   
   6. **GDRの算出**  
@@ -47,7 +47,7 @@
 
 **Distorsionフォルダ，StandardフォルダにDICOMファイルを入れてください．**
 
-- `Geometric_Distortion_ratio_v1.py`  
+- `Geometric_Distortion_ratio_v1_4.py`  
    メインの実行ファイルです．
 
 - `Difference_bmp`  
@@ -129,7 +129,7 @@
 
 ## 2. 実行
 
-1. PyCahrmで`Geometric_Distortion_ratio_v1.py`を開いてください．  
+1. PyCahrmで`Geometric_Distortion_ratio_v1_4.py`を開いてください．  
    具体的な作業は[こちらの説明](https://github.com/YosukeSugiura/EPI_DistortionAssesment/blob/pycharm/how_to_use_pycharm.md)を見てください．
 
 2. 実行してください．(通常，PyCharmのウィンドウ右上の実行ボタン(緑色の矢印)を押す or メニューバーから`Run`→`Run`，コンテクストメニューから`Geometric_Distortion_ratio_v1`を選択．)
